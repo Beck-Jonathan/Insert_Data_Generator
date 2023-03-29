@@ -39,6 +39,7 @@ namespace Insert_Data_Generator
             String file = Console.ReadLine();
             StreamWriter WriteBuddy = new StreamWriter("c:\\csharp\\" + file + "sql.txt");
             StreamReader SqlBuddy = new StreamReader("c:\\csharp\\" + file + ".txt");
+            SqlBuddy.ReadLine(); // skip first line as it is just heading data
 
             string ln;
             char[] separator = { '\t' };
@@ -59,7 +60,10 @@ namespace Insert_Data_Generator
             {
                 string[] parts;
                 parts = ln.Split(separator);
-                if (GrandCount == 0) {
+                if (parts[0] == "" && parts[1] == "" && parts[2] == "" && parts[3] == "" && parts[8] == "") {
+                    break;
+                        }
+                    if (GrandCount == 0) {
                     output = "USE " + parts[1] + ";\n" ;
                     To_console_and_file(output, WriteBuddy);
                 }
@@ -76,7 +80,7 @@ namespace Insert_Data_Generator
                 }
                 if (GrandCount == 3) {
                     String Part2;
-                    for (int i = 0; i < parts.Length-1; i++)
+                    for (int i = 0; i < parts.Length; i++)
                     {
                         if (i > 0) {
                             Console.Write(", ");
@@ -95,8 +99,16 @@ namespace Insert_Data_Generator
                 if (GrandCount > 3) {
                     Console.Write("(");
                     WriteBuddy.Write("(");
-                    for (int i = 0; i < parts.Length-1; i++) {
-
+                    for (int i = 0; i < parts.Length; i++) {
+                        if (parts[i].Equals("null"))
+                        {
+                            leftQuote = "";
+                            rightQuote = "";
+                        }
+                        else {
+                            leftQuote = "\'";
+                            rightQuote = "\'";
+                        }
                         Console.Write(leftQuote);
                         WriteBuddy.Write(leftQuote);
                         Console.Write(parts[i]);
@@ -104,7 +116,7 @@ namespace Insert_Data_Generator
 
                         Console.Write(rightQuote);
                         WriteBuddy.Write(rightQuote);
-                        if (i < parts.Length - 2) {
+                        if (i < parts.Length - 1) {
                             Console.Write(",");
                             WriteBuddy.Write(",");
                         }
